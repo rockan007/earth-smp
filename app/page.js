@@ -1,113 +1,142 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import React, { useEffect, useRef } from "react";
+import * as BABYLON from "babylonjs";
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+const EarthModel = () => {
+  const canvasRef = useRef(null);
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+  useEffect(() => {
+    const loadGeoJSON = async (url) => {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data;
+    };
+    // 创建国家边界对象
+    const createCountryBorders = (geoJSONData) => {
+      const canvas = canvasRef.current;
+      const engine = new BABYLON.Engine(canvas, true);
+      const scene = new BABYLON.Scene(engine);
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+      // 创建一个相机
+      const camera = new BABYLON.ArcRotateCamera(
+        "camera",
+        -Math.PI / 2,
+        Math.PI / 4,
+        10,
+        new BABYLON.Vector3(0, 0, 0)
+      );
+      camera.attachControl(canvas, true);
+      camera.wheelPrecision = 20; // 降低缩放速度
+      camera.minZ = 0.1; // 设置相机的最小深度范围
+      camera.maxZ = 100; // 设置相机的最大深度范围
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+      // 创建一个光源
+      const light = new BABYLON.HemisphericLight(
+        "light",
+        new BABYLON.Vector3(0, 1, 0),
+        scene
+      );
+      light.intensity = 0.5; // 增加光源的强度
+      light.diffuse = new BABYLON.Color3(1, 1, 1); // 设置光源的漫射颜色
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
-}
+      // 创建地球模型
+      const earthMaterial = new BABYLON.StandardMaterial(
+        "earthMaterial",
+        scene
+      );
+
+      earthMaterial.diffuseTexture = new BABYLON.Texture(
+        "/textures/earth.jpg",
+        scene
+      );
+      const earth = BABYLON.MeshBuilder.CreateSphere(
+        "earth",
+        { diameter: 2 },
+        scene
+      );
+
+      earth.material = earthMaterial;
+      earth.rotation.x = Math.PI;
+
+      earthMaterial.ambientColor = new BABYLON.Color3(1, 1, 1); // 增加材质的环境反射
+      earthMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1); // 增加材质的自发光
+
+      const radius = earth.getBoundingInfo().boundingSphere.radius / 2;
+      // 调整 canvas 元素样式使其全屏
+      engine.getRenderingCanvas().style.width = "100%";
+      engine.getRenderingCanvas().style.height = "100%";
+      // 遍历 GeoJSON 数据中的 features
+      geoJSONData.features.forEach((feature) => {
+        const coordinates = feature.geometry.coordinates;
+
+        let points = [];
+        coordinates.forEach((coords) => {
+          points = [];
+          coords.forEach((coord) => {
+            if (Array.isArray(coord[0])) {
+              points = [];
+              coord.forEach((co) => {
+                points.push(latLongToVector3(co[1], co[0], radius));
+              });
+              createCountryBorder(feature,points,scene)
+              points = []
+            } else {
+              points.push(latLongToVector3(coord[1], coord[0], radius));
+            }
+          });
+          createCountryBorder(feature,points,scene)
+        });
+      });
+
+      engine.runRenderLoop(() => {
+        scene.render();
+      });
+      return () => {
+        scene.dispose();
+        engine.dispose();
+      };
+    };
+    function createCountryBorder(feature, points, scene) {
+      // 创建边界路径
+      const borderMesh = BABYLON.MeshBuilder.CreateLines(
+        "border",
+        { points: points },
+        scene
+      );
+      borderMesh.color = new BABYLON.Color3(1, 1, 1);
+      // 添加点击事件
+      borderMesh.actionManager = new BABYLON.ActionManager(scene);
+      borderMesh.actionManager.registerAction(
+        new BABYLON.ExecuteCodeAction(
+          BABYLON.ActionManager.OnPickTrigger,
+          () => {
+            console.log(`Selected country: ${feature.properties.name}`);
+            // 在这里处理选中国家的逻辑，例如显示信息、改变颜色等
+          }
+        )
+      );
+    }
+    function latLongToVector3(lat, lon, radius) {
+      const phi = ((90 - lat) * Math.PI) / 180; // 纬度转换为弧度
+      const theta = ((lon + 180) * Math.PI) / 180; // 经度转换为弧度
+
+      const x = radius * Math.sin(phi) * Math.cos(theta);
+      const y = radius * Math.cos(phi);
+      const z = radius * Math.sin(phi) * Math.sin(theta);
+
+      return new BABYLON.Vector3(x, y, z).scale(1.16);
+    }
+
+    const disposeFunc = loadGeoJSON("countries.geo.json")
+      .then((data) => createCountryBorders(data))
+      .catch((error) => console.error("Error loading GeoJSON:", error));
+
+    return () => {
+      disposeFunc.then((func) => func());
+    };
+  }, []);
+  return <canvas ref={canvasRef} class="w-screen h-screen" />;
+};
+
+export default EarthModel;
