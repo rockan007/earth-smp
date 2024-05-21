@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { headers } from 'next/headers';
 import * as BABYLON from "babylonjs";
 
 import Footer from './components/Footer';
@@ -139,11 +138,10 @@ const EarthModel = () => {
       disposeFunc.then((func) => func());
     };
   }, []);
-  const headersList = headers();
-  const host = headersList.get('host'); // to get domain
+  const currentDomain = window.location.hostname;
   return <div className="relative min-h-screen">
         <canvas ref={canvasRef} class="w-screen h-screen" />
-        {host.includes('lostbug.cn')&&<Footer ></Footer>}
+        {currentDomain.includes('lostbug.cn')&&<Footer ></Footer>}
     </div>;
 };
 
