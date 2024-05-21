@@ -3,7 +3,9 @@
 import React, { useEffect, useRef } from "react";
 import * as BABYLON from "babylonjs";
 
-const EarthModel = () => {
+import Footer from './components/Footer';
+
+const EarthModel = ({currentDomain}) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -136,7 +138,20 @@ const EarthModel = () => {
       disposeFunc.then((func) => func());
     };
   }, []);
-  return <canvas ref={canvasRef} class="w-screen h-screen" />;
+  return <div className="relative min-h-screen">
+        <canvas ref={canvasRef} class="w-screen h-screen" />
+        {currentDomain.includes(lostbug)&&<Footer ></Footer>}
+    </div>;
 };
+
+export async function getServerSideProps({ req }) {
+  const currentDomain = req.headers.host;
+
+  return {
+      props: {
+          currentDomain
+      }
+  };
+}
 
 export default EarthModel;
