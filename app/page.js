@@ -5,7 +5,7 @@ import * as BABYLON from "babylonjs";
 
 import Footer from './components/Footer';
 
-const EarthModel = ({currentDomain}) => {
+const EarthModel = ({searchParams}) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -140,18 +140,8 @@ const EarthModel = ({currentDomain}) => {
   }, []);
   return <div className="relative min-h-screen">
         <canvas ref={canvasRef} class="w-screen h-screen" />
-        {currentDomain.includes('lostbug.cn')&&<Footer ></Footer>}
+        {searchParams.get('host').includes('lostbug.cn')&&<Footer ></Footer>}
     </div>;
 };
-
-export async function getServerSideProps({ req }) {
-  const currentDomain = req.headers.host;
-
-  return {
-      props: {
-          currentDomain
-      }
-  };
-}
 
 export default EarthModel;
