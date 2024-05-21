@@ -140,7 +140,7 @@ const EarthModel = ({currentDomain}) => {
   }, []);
   return <div className="relative min-h-screen">
         <canvas ref={canvasRef} class="w-screen h-screen" />
-        {currentDomain.includes(lostbug)&&<Footer ></Footer>}
+        {currentDomain.includes('lostbug.cn')&&<Footer ></Footer>}
     </div>;
 };
 
