@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { headers } from 'next/headers';
 import * as BABYLON from "babylonjs";
 
 import Footer from './components/Footer';
 
-const EarthModel = ({searchParams}) => {
+const EarthModel = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -138,9 +139,11 @@ const EarthModel = ({searchParams}) => {
       disposeFunc.then((func) => func());
     };
   }, []);
+  const headersList = headers();
+  const host = headersList.get('host'); // to get domain
   return <div className="relative min-h-screen">
         <canvas ref={canvasRef} class="w-screen h-screen" />
-        {searchParams.get('host').includes('lostbug.cn')&&<Footer ></Footer>}
+        {host.includes('lostbug.cn')&&<Footer ></Footer>}
     </div>;
 };
 
