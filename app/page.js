@@ -7,8 +7,12 @@ import Footer from './components/Footer';
 
 const EarthModel = () => {
   const canvasRef = useRef(null);
+  const [currentDomain, setCurrentDomain] = useState('');
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentDomain(window.location.hostname);
+    }
     const loadGeoJSON = async (url) => {
       const response = await fetch(url);
       const data = await response.json();
@@ -138,7 +142,6 @@ const EarthModel = () => {
       disposeFunc.then((func) => func());
     };
   }, []);
-  const currentDomain = window.location.hostname;
   return <div className="relative min-h-screen">
         <canvas ref={canvasRef} class="w-screen h-screen" />
         {currentDomain.includes('lostbug.cn')&&<Footer ></Footer>}
